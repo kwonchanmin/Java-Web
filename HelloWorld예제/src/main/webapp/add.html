@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>두 수를 더한 결과는? </h1>
+	<!-- 사용자 입력양식을 만들꺼다. -->
+	<!-- input을 사용할 때 서버쪽을 호출할려면 form tag를 사용해줘야된다. -->
+	<form action="http://127.0.0.1:8080/first/sum" method="post"> <!-- method 안에 get을 적으면 doGet을 호출하고 post를 적으면 doPost를 호출 -->
+	<input type="text" name="myNum1"> + <input type="text" name="myNum2">
+	<br><br>
+	<input type="submit" value="서버로 전송"> <!-- submit은 버튼과 동일하지만 서버를 호출할 수 있는 능력을 가짐  -->
+	</form>
+</body>
+</html>
