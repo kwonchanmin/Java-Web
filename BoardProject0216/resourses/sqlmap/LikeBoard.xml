@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+          PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" 
+          "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >          
+<mapper namespace="myLikeBoard">
+
+	<select id="LikeBoard" resultType="LikeBoard">		
+		<![CDATA[
+			  SELECT L.likeNum AS likeNum, M.memberId AS memberId, B.boardNum AS boardNum, L.like_check AS like_check
+			  FROM LikeBoard AS L 
+			  JOIN members AS M
+			  ON M.memberId = L.memberId
+			  JOIN boards AS B
+			  On B.boardNum = L.boardNum
+			  WHERE L.boardNum =#{boardNum} AND L.memberId = #{memberId}
+		]]>			  
+	</select>
+
+	<insert id="LikePlus" parameterType="LikeBoard" >
+		<![CDATA[
+			INSERT INTO LikeBoard (
+			boardNum, memberId
+			)
+			VALUES (#{boardNum}, #{memberId})
+			
+		]]>
+	</insert>
+	
+	<delete id="LikeMinus" parameterType="LikeBoard" >
+		<![CDATA[
+			DELETE FROM LikeBoard
+			WHERE boardNum = #{boardNum} AND memberId = #{memberId}
+			
+		]]>
+	</delete>
+	
+	<select id="CountLike" resultType="LikeBoard">		
+		<![CDATA[
+			  SELECT count(M.memberId) AS like_check
+			  FROM LikeBoard AS L 
+			  JOIN members AS M
+			  ON M.memberId = L.memberId
+			  JOIN boards AS B
+			  On B.boardNum = L.boardNum
+			  WHERE L.boardNum =#{boardNum} 
+		]]>			  
+	</select>
+	
+	
+
+</mapper>

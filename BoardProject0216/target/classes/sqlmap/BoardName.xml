@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+          PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" 
+          "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >          
+<mapper namespace="myBoardName">
+
+	<select id="NameBoards" resultType="BoardName">		
+		<![CDATA[
+			SELECT boardNum,boardTitle,boardAuthor,boardContent,memberName,boardDate,boardLike
+			  FROM boards as B 
+			  RIGHT OUTER JOIN members as M 
+			  ON  B.boardAuthor = M.memberId 
+		]]>
+	</select>
+	
+	<select id="TitleName" parameterType="BoardName" 
+		resultType="BoardName">		
+		<![CDATA[
+			SELECT B.boardNum, B.boardTitle,B.boardAuthor,B.boardContent,M.memberName,B.boardDate, count(L.memberId) AS boardLike
+			  FROM boards as B 
+			  RIGHT OUTER JOIN members as M 
+			  ON  B.boardAuthor = M.memberId
+			  LEFT OUTER JOIN LikeBoard AS L 
+			  ON B.boardNum = L.boardNum
+			WHERE B.boardNum = #{boardNum}
+		]]>
+	</select>
+	
+	<update id="UpdateContent" parameterType="BoardName" >
+		<![CDATA[
+			UPDATE boards 
+			SET boardContent = #{boardContent},
+				boardTitle = #{boardTitle}
+			WHERE boardNum = #{boardNum}  
+			
+		]]>
+	</update>
+	
+	<delete id="DeleteBoard" parameterType="BoardName" >
+		<![CDATA[
+			DELETE FROM boards
+			WHERE boardNum = #{boardNum}
+			
+		]]>
+	</delete>
+	
+	<insert id="InsertBoard" parameterType="BoardName" >
+		<![CDATA[
+			INSERT INTO boards (boardTitle,boardAuthor,boardContent)
+			VALUES (#{boardTitle},#{boardAuthor},#{boardContent})
+			
+		]]>
+	</insert>
+	
+	<select id="CountBoard" resultType="BoardName">		
+		<![CDATA[
+			  SELECT B.boardNum, B.boardTitle, B.boardDate, B.boardLike, M.memberName , count(C.commentNum) AS comment_count
+			  FROM boards AS B 
+			  JOIN members AS M 
+			  ON B.boardAuthor = M.memberId
+		      LEFT OUTER JOIN comment AS C
+		 	  ON B.boardNum = C.boardNum 
+			  GROUP BY B.boardNum
+			  ORDER BY B.boardNum ASC
+		]]>
+	</select>
+	
+	<select id="LikeBoard" resultType="BoardName">		
+		<![CDATA[
+			SELECT B.boardNum, B.boardTitle,B.boardDate, M.memberName , 
+			count(C.commentNum) AS comment_count, count(L.memberId) AS boardLike
+			FROM boards AS B 
+			JOIN members AS M 
+			ON B.boardAuthor = M.memberId
+			LEFT OUTER JOIN comment AS C
+			ON B.boardNum = C.boardNum 
+			LEFT OUTER JOIN LikeBoard AS L ON B.boardNum = L.boardNum
+			GROUP BY B.boardNum
+			ORDER BY B.boardNum ASC;
+		]]>			  
+	</select>
+
+</mapper>

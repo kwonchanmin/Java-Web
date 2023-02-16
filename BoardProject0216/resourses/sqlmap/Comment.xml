@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+          PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" 
+          "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >          
+<mapper namespace="myComment">
+
+	<select id="Comments" resultType="Comment">		
+		<![CDATA[
+			SELECT commentNum , commentId, boardNum, memberName ,commentContent, commentDate
+			  FROM comment as C 
+			  	INNER JOIN members as M 
+			  ON  C.commentId = M.memberId 
+			  WHERE boardNum=#{boardNum}
+		]]>
+	</select>
+	
+	<insert id="createComment" parameterType="Comment">
+		<![CDATA[
+			INSERT INTO comment (commentId, boardNum, commentContent)
+			VALUES (#{commentId}, #{boardNum} , #{commentContent})
+ 		]]>
+	
+	</insert>
+	
+	<delete id="deleteComment" parameterType="Comment">
+		<![CDATA[
+			DELETE FROM comment
+			WHERE commentNum = #{commentNum}
+ 		]]>
+	
+	</delete>
+	
+	<select id="OneComment" resultType="Comment">		
+		<![CDATA[
+			SELECT commentNum , commentId, boardNum,memberName ,commentContent, commentDate
+			  FROM comment as C 
+			  	INNER JOIN members as M 
+			  ON  C.commentId = M.memberId 
+			  WHERE commentNum = #{commentNum}
+		]]>
+	</select>
+	
+	<update id="UpdateComment" parameterType="Comment">
+		<![CDATA[
+			UPDATE comment 
+			SET commentContent = #{commentContent}
+			WHERE commentNum = #{commentNum}
+ 		]]>
+	
+	</update>
+</mapper>
